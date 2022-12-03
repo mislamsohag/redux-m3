@@ -9,6 +9,8 @@ export default function ProductProvider({ children }) {
 
     const [state, dispatch] = useReducer(productReducer, initialaState);
 
+    console.log(state);
+
     useEffect(() => {
         dispatch({ type: actionTypes.FETCHING_START });
         fetch("products.json")

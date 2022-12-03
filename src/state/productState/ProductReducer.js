@@ -4,6 +4,9 @@ export const initialaState = {
     loading: false,
     products: [],
     error: false,
+    cart: [],
+    // Aita kora Baki Ace
+    wishLisht: [],
 };
 
 export const productReducer = (state, action) => {
@@ -26,6 +29,18 @@ export const productReducer = (state, action) => {
                 ...state,
                 loading: false,
                 error: true,
+            };
+        case actionTypes.ADD_TO_CART:
+            return {
+                ...state,
+                cart: [...state.cart, action.payload],
+            };
+
+        // Aita kora baki ace
+        case actionTypes.REMOVE_FROM_CART:
+            return {
+                ...state,
+                wishLisht: [...state.wishLisht, action.payload],
             };
 
         default:
