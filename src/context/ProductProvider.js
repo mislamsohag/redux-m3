@@ -1,20 +1,28 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import { actionTypes } from "../state/productState/actionTypes";
+import { initialaState, productReducer } from "../state/productState/ProductReducer";
 
 const PRODUCT_CONTEXT = createContext();
 
 //atar maddhome sokol childrenke rapping kore ar vitorer data available kore
 export default function ProductProvider({ children }) {
 
-    const [data, setData] = useState([]);
+    const [state, dispatch] = useReducer(productReducer, initialaState);
 
     useEffect(() => {
+        dispatch({ type: actionTypes.FETCHING_START });
         fetch("products.json")
-            .then(res => res.json())
-            .then(data => setData(data))
-    }, []);
+            .then((res) => res.json())
+            .then((data) =>
+                dispatch({ type: actionTypes.FETCHING_SUCCESS, payload: data })
+                // (console.log(data))
+            ).catch(() => {
+                dispatch({ type: actionTypes.FETCHING_ERROR });
+            });
 
+    }, []);
     const value = {
-        data,
+        state, dispatch
     };
 
     return (
@@ -22,11 +30,11 @@ export default function ProductProvider({ children }) {
             {children}
         </PRODUCT_CONTEXT.Provider>
     )
-};
 
+};
 //ata akta higher order hook
 export const useProducts = () => {
     const context = useContext(PRODUCT_CONTEXT);
     return context;
-}
+};
 
